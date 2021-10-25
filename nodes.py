@@ -30,6 +30,7 @@ s.listen(5)
 
 while(1):
     c,addr=s.accept()
+    print("Client connection accepted")
     count=0
     while(1):
         flag=c.recv(1024).decode('UTF-8')
@@ -84,6 +85,7 @@ while(1):
                 combined_data+=tran.to_string()
                 combined_data+='\n'
             bcn.add_new_block(combined_data,time())
+            verified.clear()
         else:
             count+=1
             if(count>100):

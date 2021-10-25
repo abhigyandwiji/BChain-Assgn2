@@ -1,11 +1,43 @@
 from time import time
 import socket
 
-current_node=5002
+current_node:int=5001
 s=socket.socket()
 s.connect(('127.0.0.1',current_node))
 
+available_nodes=[5001,5002,5003]
+
+def electNewLeader(available_nodes,current_node):
+    l=len(available_nodes)
+    i=available_nodes.index(current_node)
+    if(i==(l-1)):
+        current_node=available_nodes[0]
+    else:
+        current_node=available_nodes[i+1]
+    return current_node
+
+tprev=time()
 while True:
+
+    tcurr=time()
+    if(tcurr-tprev>20):
+        flag="Mine"
+        s.send(flag.encode())
+        s.close()
+        print("Leader Node switched")
+        found=0
+        while (found==0):
+            current_node=electNewLeader(available_nodes,current_node)
+            print(current_node)
+            try:
+                s=socket.socket()
+                s.connect(('127.0.0.1',current_node))
+                tprev=time()
+                found=1
+            except:
+                found=0
+
+
     print("Please select an option: ")
     print("1: Add transaction\n2: View Blockchain\n3: View verified transactions\n4: Exit")
     choice=str(input("Enter code: "))
@@ -49,8 +81,7 @@ while True:
         print("\n\n")
 
     elif(choice == '4'):
-        flag="Mine"
-        s.send(flag.encode())
+        break
 
     else:
         print("Invalid Input")
