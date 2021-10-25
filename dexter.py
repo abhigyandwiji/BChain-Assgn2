@@ -25,21 +25,23 @@ while True:
         s.send(flag.encode())
         s.recv(1024)
         s.close()
+        s=socket.socket()
         print("Leader Node switched")
         found=0
         i=0
-        while(i<101010):
+        while(i<10101010):
             i+=1
         while (found==0):
             current_node=electNewLeader(available_nodes,current_node)
             print(current_node)
             try:
-                s=socket.socket()
                 s.connect(('127.0.0.1',current_node))
                 tprev=time()
                 found=1
+                continue
             except:
                 found=0
+        
 
 
     print("Please select an option: ")

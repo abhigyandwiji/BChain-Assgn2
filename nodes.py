@@ -84,8 +84,16 @@ while(1):
                     continue
                 combined_data+=tran.to_string()
                 combined_data+='\n'
-            bcn.add_new_block(combined_data,time())
+            tmine=time()
+            bcn.add_new_block(combined_data,tmine)
+            verified.clear()
+            verified.append(t)
+            j=1
+            while(j<100000):
+                j+=1
             c.send("Done".encode())
+            c.close()
+            print("Client disconnected")
 
             for node in companion_nodes:
                 print(node)
@@ -95,15 +103,24 @@ while(1):
                 s2.connect(('127.0.0.1',node))
                 print("Connected to peer")
                 s2.send("Verify".encode())
+                s2.recv(1024)
+                msg="{},{}".format(combined_data,tmine)
+                s2.send(msg.encode())
                 s2.close()
-
-            verified.clear()
+                print("Peer disconnected")
             break
+
         elif(flag=="Verify"):
-            print("Hello ji")
+            c.send("Hanji bhejo".encode())
+            msg=c.recv(1024).decode()
+            params=msg.split(',')
+            bcn.add_new_block(params[0],params[1])
+            c.close()
+            print("Peer disconnected")
+            break
+
         else:
             count+=1
             if(count>100):
                 break
             continue
-    c.close()
