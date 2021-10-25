@@ -85,7 +85,22 @@ while(1):
                 combined_data+=tran.to_string()
                 combined_data+='\n'
             bcn.add_new_block(combined_data,time())
+            c.send("Done".encode())
+
+            for node in companion_nodes:
+                print(node)
+                if(node==port):
+                    continue
+                s2=socket.socket()
+                s2.connect(('127.0.0.1',node))
+                print("Connected to peer")
+                s2.send("Verify".encode())
+                s2.close()
+
             verified.clear()
+            break
+        elif(flag=="Verify"):
+            print("Hello ji")
         else:
             count+=1
             if(count>100):

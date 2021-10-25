@@ -23,9 +23,13 @@ while True:
     if(tcurr-tprev>20):
         flag="Mine"
         s.send(flag.encode())
+        s.recv(1024)
         s.close()
         print("Leader Node switched")
         found=0
+        i=0
+        while(i<101010):
+            i+=1
         while (found==0):
             current_node=electNewLeader(available_nodes,current_node)
             print(current_node)
